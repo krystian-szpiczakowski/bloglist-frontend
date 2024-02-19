@@ -14,15 +14,27 @@ const App = () => {
     )  
   }, [])
 
-  const onLoginSuccess = (loggedInUser) => {
-    console.log("Hura", loggedInUser);
-    setUser(loggedInUser)
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem("loggedBlogUser")
+    setUser(JSON.parse(loggedUserJson))
+  }, [])
+
+  const onLoginSuccess = (loggedUser) => {
+    window.localStorage.setItem("hehe", "wtf");
+    const loggedUserString = JSON.stringify(loggedUser);
+    window.localStorage.setItem("loggedBlogUser", loggedUserString);
+    setUser(loggedUser)
+  }
+
+  const onLogout = () => {
+    window.localStorage.removeItem("loggedBlogUser");
+    setUser(null);
   }
 
   return (
     <div>
       {!user && <LoginForm onLoginSuccess={onLoginSuccess}/>}
-      {user && <UserDetails user={user}/>}
+      {user && <UserDetails user={user} onLogout={onLogout}/>}
       {user && <BlogList blogs={blogs}/>}
     </div>
   )
