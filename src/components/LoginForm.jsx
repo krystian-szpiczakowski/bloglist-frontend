@@ -1,7 +1,7 @@
 import { useState } from "react";
 import loginService from "../services/login";
 
-const Login = ({onLoginSuccess}) => {
+const Login = ({onLoginSuccess, onLoginError}) => {
   const onChangeUsername = (event) => {
     setUsername(event.target.value);
   };
@@ -20,6 +20,8 @@ const Login = ({onLoginSuccess}) => {
 
     if (user) {
       onLoginSuccess(user);
+    } else {
+      onLoginError({message: "Wrong username or password"});
     }
   };
 
