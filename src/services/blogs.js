@@ -17,4 +17,9 @@ const create = async (blog) => {
   return response.data;
 };
 
-export default { getAll, create };
+const sendLikes = async (id, likes) => {
+  const response = await axios.put(`${baseUrl}/${id}`, {likes});
+  return response.data;
+}
+
+export default { getAll, create, sendLikes };
