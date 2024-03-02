@@ -13,7 +13,14 @@ const App = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((blogOne, blogTwo) => {
+        const likesOne = blogOne.likes || 0;
+        const likesTwo = blogTwo.likes || 0;
+
+        return likesTwo - likesOne;
+    })));
   }, []);
 
   useEffect(() => {
@@ -61,11 +68,10 @@ const App = () => {
   const onCreateBlog = async (blog) => {
     const blogCreated = await blogService.create(blog);
     setBlogs(blogs.concat(blogCreated));
-    
+
     toggleFormRef.current.toggleVisibility();
     formRef.current.clearInputs();
   };
-
 
   return (
     <div>
