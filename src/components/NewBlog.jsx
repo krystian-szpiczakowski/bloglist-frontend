@@ -58,4 +58,6 @@ const NewBlog = forwardRef((props, refs) => {
   );
 });
 
+NewBlog.displayName = "New Blog";
+
 export default NewBlog;
