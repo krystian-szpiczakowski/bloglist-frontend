@@ -5,6 +5,7 @@ import UserDetails from "./components/UserDetails";
 import BlogList from "./components/BlogList";
 import NewBlog from "./components/NewBlog";
 import blogService from "./services/blogs";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -29,9 +30,11 @@ const App = () => {
 
     const lastNotification = notifications[notifications.length - 1];
     if (lastNotification) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         removeNotification(lastNotification.id);
       }, 3000);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [notifications]);
 
@@ -52,8 +55,9 @@ const App = () => {
     setUser(null);
   };
 
-  const onCreateBlog = (blog) => {
-    setBlogs(blogs.concat(blog));
+  const onCreateBlog = async (blog) => {
+    const blogCreated = await blogService.create(blog);
+    setBlogs(blogs.concat(blogCreated));
   };
 
   return (
@@ -66,7 +70,11 @@ const App = () => {
         />
       )}
       {user && <UserDetails user={user} onLogout={onLogout} />}
-      {user && <NewBlog onCreate={onCreateBlog} />}
+      {user && (
+        <Togglable buttonLabel="New blog">
+          <NewBlog onCreate={onCreateBlog} />
+        </Togglable>
+      )}
       {user && <BlogList blogs={blogs} />}
     </div>
   );
