@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 
-const NewBlog = ({ onCreate }) => {
+const NewBlog = forwardRef((props, refs) => {
+  const onCreate = props.onCreate;
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
   const onSubmitForm = async (event) => {
     event.preventDefault();
-    onCreate({title, author, url});
+    onCreate({ title, author, url });
   };
+
+  const clearInputs = () => {
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
+
+  useImperativeHandle(refs, () => {
+    return {
+      clearInputs,
+    };
+  });
 
   return (
     <div>
@@ -43,6 +56,6 @@ const NewBlog = ({ onCreate }) => {
       </form>
     </div>
   );
-};
+});
 
 export default NewBlog;

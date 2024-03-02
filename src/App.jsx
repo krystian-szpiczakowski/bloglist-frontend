@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Notifications from "./components/Notifications";
 import LoginForm from "./components/LoginForm";
 import UserDetails from "./components/UserDetails";
@@ -55,10 +55,17 @@ const App = () => {
     setUser(null);
   };
 
+  const toggleFormRef = useRef();
+  const formRef = useRef();
+
   const onCreateBlog = async (blog) => {
     const blogCreated = await blogService.create(blog);
     setBlogs(blogs.concat(blogCreated));
+    
+    toggleFormRef.current.toggleVisibility();
+    formRef.current.clearInputs();
   };
+
 
   return (
     <div>
@@ -71,8 +78,8 @@ const App = () => {
       )}
       {user && <UserDetails user={user} onLogout={onLogout} />}
       {user && (
-        <Togglable buttonLabel="New blog">
-          <NewBlog onCreate={onCreateBlog} />
+        <Togglable buttonLabel="New blog" ref={toggleFormRef}>
+          <NewBlog onCreate={onCreateBlog} ref={formRef} />
         </Togglable>
       )}
       {user && <BlogList blogs={blogs} />}
