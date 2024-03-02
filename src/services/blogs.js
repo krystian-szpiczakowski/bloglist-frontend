@@ -22,4 +22,14 @@ const sendLikes = async (id, likes) => {
   return response.data;
 }
 
-export default { getAll, create, sendLikes };
+const deleteBlog = async (id) => {
+  const user = JSON.parse(window.localStorage.getItem("loggedBlogUser"));
+  const response = await axios.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    }
+  });
+  return response.data;
+}
+
+export default { getAll, create, sendLikes, deleteBlog };

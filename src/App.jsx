@@ -88,7 +88,7 @@ const App = () => {
           <NewBlog onCreate={onCreateBlog} ref={formRef} />
         </Togglable>
       )}
-      {user && <BlogList blogs={blogs} />}
+      {user && <BlogList blogs={blogs} setBlogs={setBlogs} />}
     </div>
   );
 };
