@@ -2,7 +2,6 @@ import { render } from "@testing-library/react";
 import { expect, test, describe, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
-import { exact } from "prop-types";
 
 describe("Blog component", () => {
   test("renders only title by default", () => {

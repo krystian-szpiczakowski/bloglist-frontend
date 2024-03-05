@@ -30,6 +30,7 @@ const NewBlog = forwardRef((props, refs) => {
         <div>
           <label htmlFor="title">Title</label>
           <input
+            data-testid="blog-title-input"
             id="title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
@@ -39,6 +40,7 @@ const NewBlog = forwardRef((props, refs) => {
         <div>
           <label htmlFor="author">Author</label>
           <input
+            data-testid="blog-author-input"
             id="author"
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
@@ -47,12 +49,13 @@ const NewBlog = forwardRef((props, refs) => {
         <div>
           <label htmlFor="url">url</label>
           <input
+            data-testid="blog-url-input"
             id="url"
             value={url}
             onChange={(event) => setUrl(event.target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <button data-testid="blog-create-button" type="submit">create</button>
       </form>
     </div>
   );
