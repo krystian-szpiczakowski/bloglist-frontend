@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "../styles.css";
-import serv from "../services/blogs";
 
-const Blog = ({ blog, onDelete }) => {
+const Blog = ({ blog, onClickLikeHandle, onDelete }) => {
   const [visible, setVisible] = useState();
   const [likes, setLikes] = useState(!isNaN(blog.likes) ? blog.likes : 0);
 
@@ -10,11 +9,12 @@ const Blog = ({ blog, onDelete }) => {
     setVisible(!visible);
   };
 
-  const sendLike = (blog) => {
+  const onClickLike = (blog) => {
     let likesParsed = parseInt(likes);
     let likesUpdated = !isNaN(likesParsed) ? likesParsed + 1 : 1;
     setLikes(likesUpdated);
-    serv.sendLikes(blog.id, likesUpdated);
+
+    onClickLikeHandle(blog, likesUpdated);
   };
 
   const deleteBlog = (blog) => {
@@ -28,7 +28,7 @@ const Blog = ({ blog, onDelete }) => {
 
   return (
     <div className="blog">
-      {blog.title} <button data-testid="blog-view-details" onClick={toggleView}>view</button>
+      {blog.title} <button data-testid="blog-view-details-button" onClick={toggleView}>view</button>
       {visible && (
         <>
           <p>Author: {blog.author}</p>
@@ -36,7 +36,7 @@ const Blog = ({ blog, onDelete }) => {
           {
             <p>
               Likes: {likes}{" "}
-              <button onClick={() => sendLike(blog)}>like</button>
+              <button data-testid="blog-like-button" onClick={() => onClickLike(blog)}>like</button>
             </p>
           }
           {loggedUser?.username === blog.user?.username && (
