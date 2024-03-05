@@ -28,7 +28,7 @@ const Blog = ({ blog, onDelete }) => {
 
   return (
     <div className="blog">
-      {blog.title} <button onClick={toggleView}>view</button>
+      {blog.title} <button data-testid="blog-view-details" onClick={toggleView}>view</button>
       {visible && (
         <>
           <p>Author: {blog.author}</p>
@@ -39,7 +39,7 @@ const Blog = ({ blog, onDelete }) => {
               <button onClick={() => sendLike(blog)}>like</button>
             </p>
           }
-          {loggedUser.username === blog.user?.username && (
+          {loggedUser?.username === blog.user?.username && (
             <button onClick={() => deleteBlog(blog)}>remove</button>
           )}
         </>
