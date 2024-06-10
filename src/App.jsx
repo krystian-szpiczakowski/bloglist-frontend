@@ -6,12 +6,13 @@ import BlogList from "./components/BlogList";
 import NewBlog from "./components/NewBlog";
 import blogService from "./services/blogs";
 import Togglable from "./components/Togglable";
+import { useNotification } from "./components/notification/useNotification";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notifications, setNotifications] = useState([]);
 
+  const { notifications, addNotification } = useNotification()
   useEffect(() => {
     blogService
       .getAll()
@@ -28,23 +29,6 @@ const App = () => {
     setUser(JSON.parse(loggedUserJson));
   }, []);
 
-  useEffect(() => {
-    const removeNotification = (id) => {
-      setNotifications((prevNotifications) =>
-        prevNotifications.filter((notification) => notification.id !== id)
-      );
-    };
-
-    const lastNotification = notifications[notifications.length - 1];
-    if (lastNotification) {
-      const timeoutId = setTimeout(() => {
-        removeNotification(lastNotification.id);
-      }, 3000);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [notifications]);
-
   const onLoginSuccess = (loggedUser) => {
     const loggedUserString = JSON.stringify(loggedUser);
     window.localStorage.setItem("loggedBlogUser", loggedUserString);
@@ -52,9 +36,7 @@ const App = () => {
   };
 
   const onLoginError = (error) => {
-    const notificationId = Date.now();
-    const newNotification = { id: notificationId, message: error.message };
-    setNotifications([...notifications, newNotification]);
+    addNotification(error.message);
   };
 
   const onLogout = () => {

@@ -3,7 +3,7 @@ const Notifications = ({ notifications }) => {
   return (
     <div>
       {notifications.map((notification) => {
-        return <Notification key={notification.id} message={notification.message} />;
+        return <Notification key={notification.id} notification={notification} />;
       })}
     </div>
   );
