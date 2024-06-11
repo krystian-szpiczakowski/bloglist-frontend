@@ -1,9 +1,10 @@
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 const baseUrl = "/api/blogs";
 
-const getAll = () => {
-  const request = axios.get(baseUrl);
-  return request.then((response) => response.data);
+const getAll = async () => {
+  const response = await axios.get(baseUrl);
+  return response.data
 };
 
 const create = async (blog) => {
@@ -17,8 +18,8 @@ const create = async (blog) => {
   return response.data;
 };
 
-const sendLikes = async (id, likes) => {
-  const response = await axios.put(`${baseUrl}/${id}`, {likes});
+const updateBlog = async (updatedBlog) => {
+  const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
   return response.data;
 }
 
@@ -32,4 +33,4 @@ const deleteBlog = async (id) => {
   return response.data;
 }
 
-export default { getAll, create, sendLikes, deleteBlog };
+export default { getAll, create, updateBlog, deleteBlog };
