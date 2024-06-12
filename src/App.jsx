@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Notifications from "./components/Notifications";
 import LoginForm from "./components/LoginForm";
 import UserDetails from "./components/UserDetails";
@@ -8,26 +8,32 @@ import blogService from "./services/blogs";
 import Togglable from "./components/Togglable";
 import { useNotification } from "./components/notification/useNotification";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import UserContext from "./components/UserContext";
 
 const App = () => {
+  const [user, userDispatch] = useContext(UserContext)
+
   const fetchedBlogs = useQuery(
     {
       queryKey: ["blogs"],
       queryFn: blogService.getAll
     }
   );
-  const [user, setUser] = useState(null);
   const { notifications, addNotification } = useNotification()
 
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogUser");
-    setUser(JSON.parse(loggedUserJson));
+    if (loggedUserJson === null) {
+      return
+    }
+    
+    userDispatch({ type: "LOGIN_SUCCESS", payload: JSON.parse(loggedUserJson) });
   }, []);
 
   const onLoginSuccess = (loggedUser) => {
     const loggedUserString = JSON.stringify(loggedUser);
     window.localStorage.setItem("loggedBlogUser", loggedUserString);
-    setUser(loggedUser);
+    userDispatch({ type: "LOGIN_SUCCESS", payload: loggedUser });
   };
 
   const onLoginError = (error) => {
@@ -36,7 +42,8 @@ const App = () => {
 
   const onLogout = () => {
     window.localStorage.removeItem("loggedBlogUser");
-    setUser(null);
+    console.log("onLogout localstorage",window.localStorage.getItem("loggedBlogUser"))
+    userDispatch({ type: "LOGOUT" });
   };
 
   const toggleFormRef = useRef();
