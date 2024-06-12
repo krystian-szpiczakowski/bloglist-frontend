@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 import Notifications from "./components/Notifications";
 import LoginForm from "./components/LoginForm";
 import UserDetails from "./components/UserDetails";
@@ -9,24 +9,44 @@ import Togglable from "./components/Togglable";
 import { useNotification } from "./components/notification/useNotification";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import UserContext from "./components/UserContext";
-
+import Users from "./components/Users";
+import { Link, BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 const App = () => {
+  const { notifications } = useNotification()
+  const [user] = useContext(UserContext)
+
+  return (
+    <div>
+      <Notifications notifications={notifications} />
+      <Router>
+        {user && <Link to="/">Home</Link>}
+        {user && <Link to="/users">Users statistics</Link>}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/users" element={user ? <Users /> : <Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+};
+
+const Home = () => {
   const [user, userDispatch] = useContext(UserContext)
+  const { addNotification } = useNotification()
 
   const fetchedBlogs = useQuery(
     {
       queryKey: ["blogs"],
       queryFn: blogService.getAll
     }
-  );
-  const { notifications, addNotification } = useNotification()
+  )
 
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJson === null) {
       return
     }
-    
+
     userDispatch({ type: "LOGIN_SUCCESS", payload: JSON.parse(loggedUserJson) });
   }, []);
 
@@ -42,7 +62,6 @@ const App = () => {
 
   const onLogout = () => {
     window.localStorage.removeItem("loggedBlogUser");
-    console.log("onLogout localstorage",window.localStorage.getItem("loggedBlogUser"))
     userDispatch({ type: "LOGOUT" });
   };
 
@@ -62,7 +81,6 @@ const App = () => {
 
   return (
     <div>
-      <Notifications notifications={notifications} />
       {!user && (
         <LoginForm
           onLoginSuccess={onLoginSuccess}
@@ -79,6 +97,6 @@ const App = () => {
       {user && <BlogList fetchedBlogs={fetchedBlogs} />}
     </div>
   );
-};
+}
 
 export default App;
