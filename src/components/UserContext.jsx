@@ -17,8 +17,9 @@ const userReducer = (state, action) => {
 const UserContext = createContext()
 
 export const UserContextProvider = (props) => {
-    const [user, userDispatch] = useReducer(userReducer, null)
-
+    const userData = JSON.parse(window.localStorage.getItem("loggedBlogUser"))
+    const [user, userDispatch] = useReducer(userReducer, userData)
+    console.log("user", user)
     return (
         <UserContext.Provider value={[user, userDispatch]}>
             {props.children}

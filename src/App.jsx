@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import UserContext from "./components/UserContext";
 import Users from "./components/Users";
 import { Link, BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import UserStats from "./components/UserStats";
 const App = () => {
   const { notifications } = useNotification()
   const [user] = useContext(UserContext)
@@ -23,7 +24,9 @@ const App = () => {
         {user && <Link to="/users">Users statistics</Link>}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/users" element={user ? <Users /> : <Navigate to="/" />} />
+          <Route path="/users" element={user ? <Users /> : <Navigate to="/" />}>
+            <Route path=":id" element={<UserStats />} />
+          </Route>
         </Routes>
       </Router>
     </div>
@@ -37,7 +40,8 @@ const Home = () => {
   const fetchedBlogs = useQuery(
     {
       queryKey: ["blogs"],
-      queryFn: blogService.getAll
+      queryFn: blogService.getAll,
+      retry: 2
     }
   )
 
