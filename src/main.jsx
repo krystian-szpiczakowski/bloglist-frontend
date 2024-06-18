@@ -4,6 +4,7 @@ import { NotificationContextProvider } from './components/notification/Notificat
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { UserContextProvider } from './components/UserContext'
 import { UserStatProvider } from './components/UserStatContext'
+import { BlogProvider } from './components/BlogContext'
 
 const queryClient = new QueryClient()
 
@@ -11,9 +12,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <UserContextProvider>
         <NotificationContextProvider>
             <QueryClientProvider client={queryClient}>
-                <UserStatProvider>
-                    <App />
-                </UserStatProvider>
+                <BlogProvider>
+                    <UserStatProvider>
+                        <App />
+                    </UserStatProvider>
+                </BlogProvider>
             </QueryClientProvider>
         </NotificationContextProvider>
     </UserContextProvider>

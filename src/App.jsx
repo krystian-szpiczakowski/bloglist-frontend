@@ -7,11 +7,13 @@ import NewBlog from "./components/NewBlog";
 import blogService from "./services/blogs";
 import Togglable from "./components/Togglable";
 import { useNotification } from "./components/notification/useNotification";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import UserContext from "./components/UserContext";
 import Users from "./components/Users";
 import { Link, BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import UserStats from "./components/UserStats";
+import Blog from "./components/Blog";
+import { useBlogData } from "./components/BlogContext";
 const App = () => {
   const { notifications } = useNotification()
   const [user] = useContext(UserContext)
@@ -27,6 +29,7 @@ const App = () => {
           <Route path="/users" element={user ? <Users /> : <Navigate to="/" />}>
             <Route path=":id" element={<UserStats />} />
           </Route>
+          <Route path="/blogs/:id" element={user ? <Blog /> : <Navigate to="/" />} />
         </Routes>
       </Router>
     </div>
@@ -36,15 +39,8 @@ const App = () => {
 const Home = () => {
   const [user, userDispatch] = useContext(UserContext)
   const { addNotification } = useNotification()
-
-  const fetchedBlogs = useQuery(
-    {
-      queryKey: ["blogs"],
-      queryFn: blogService.getAll,
-      retry: 2
-    }
-  )
-
+  const fetchedBlogs = useBlogData()
+  
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogUser");
     if (loggedUserJson === null) {

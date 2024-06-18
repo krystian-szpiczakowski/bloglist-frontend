@@ -2,11 +2,10 @@ import { useState } from "react";
 import serv from "../services/blogs";
 import "../styles.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import { useBlogData } from "./BlogContext";
 
-const Blog = ({ blog }) => {
-  const [visible, setVisible] = useState();
-  const [likes, setLikes] = useState(!isNaN(blog.likes) ? blog.likes : 0);
-
+const Blog = () => {
   const queryClient = useQueryClient()
   const updateBlogMutation = useMutation({
     mutationFn: serv.updateBlog,
@@ -17,6 +16,15 @@ const Blog = ({ blog }) => {
     mutationFn: serv.deleteBlog,
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["blogs"] }) }
   })
+  
+  const { id } = useParams()
+  const { data: blogs } = useBlogData()
+  const blog = blogs?.find(blog => blog.id === id)
+  const [likes, setLikes] = useState(!isNaN(blog?.likes) ? blog?.likes : 0);
+
+  if (!blog) {
+    return null
+  }
 
   const toggleView = () => {
     setVisible(!visible);
@@ -42,8 +50,8 @@ const Blog = ({ blog }) => {
 
   return (
     <div className="blog">
-      {blog.title} <button data-testid="blog-view-details-button" onClick={toggleView}>view</button>
-      {visible && (
+      {blog.title}
+      {(
         <>
           <p>Author: {blog.author}</p>
           {blog.url && <p>URL: {blog.url}</p>}

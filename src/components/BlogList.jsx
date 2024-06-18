@@ -1,12 +1,11 @@
-import Blog from "./Blog";
-
+import { Link } from "react-router-dom";
 const BlogList = ({ fetchedBlogs }) => {
   if (fetchedBlogs.isLoading) {
     return <div>loading blogs...</div>;
   }
 
   if (fetchedBlogs.isError) {
-    return null
+    return <div>blogs could not be loaded</div>
   }
 
 
@@ -18,9 +17,11 @@ const BlogList = ({ fetchedBlogs }) => {
   return (
     <div>
       <h2>blogs</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <ul className="bloglist">
+        {blogs.map((blog) => (
+          <li key={blog.id}><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></li>
+        ))}
+      </ul>
     </div>
   );
 };

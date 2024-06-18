@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { useUserStat } from "./UserStatContext"
 
 const UserStats = () => {
@@ -8,7 +8,6 @@ const UserStats = () => {
         return null
     }
     const userStat = data.find(userStat => userStat.user.id === params.id)
-    const location = useLocation()
 
     return (
         <div>
